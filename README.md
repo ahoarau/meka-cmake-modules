@@ -1,10 +1,13 @@
 Meka Cmake Modules 
 
 # Getting the repo
+```
 #!bash
 git clone git@bitbucket.org:ensta/meka-cmake-modules.git
 ```
+
 # Installing
+```
 #!bash
 cd meka-cmake-modules
 mkdir build; cd build
