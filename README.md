@@ -1,4 +1,4 @@
-Meka Cmake Modules 
+# Meka Cmake Modules 
 
 # Getting the repo
 ```
@@ -17,9 +17,9 @@ sudo make install
 
 or cmake .. -DOVERWRITE=1 to overwrite existing files
 
-# /!\ WARNING : the files are (for now) installed in ${CMAKE_ROOT}/Modules
+ /!\ WARNING : the files are (for now) installed in ${CMAKE_ROOT}/Modules
 
-# TODO : use a proper directory
+TODO : use a proper directory
 
 
 
