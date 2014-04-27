@@ -107,13 +107,12 @@ function(PROTOBUF_GENERATE_PYTHON PYSRC OUTPATH)
   foreach(FIL ${ARGN})
     get_filename_component(ABS_FIL ${FIL} ABSOLUTE)
     get_filename_component(FIL_WE ${FIL} NAME_WE)
-	
+
     list(APPEND PYSRC "${OUTPATH}/${FIL_WE}_pb2.py")
     add_custom_command(
       OUTPUT "${OUTPATH}/${FIL_WE}_pb2.py"
       COMMAND  ${PROTOBUF_PROTOC_EXECUTABLE}
-      ARGS --python_out ${OUTPATH} ${_protobuf_include_path}
-           ${ABS_FIL}
+      ARGS --python_out ${OUTPATH} ${_protobuf_include_path} ${ABS_FIL}
       DEPENDS ${ABS_FIL}
       COMMENT "Running Python protocol buffer compiler on ${FIL}"
       VERBATIM )
