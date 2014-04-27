@@ -78,21 +78,41 @@ function(PROTOBUF_GENERATE_PYTHON PYSRC OUTPATH)
   if(NOT ARGN)
     message(SEND_ERROR "Error: PROTOBUF_GENERATE_PYTHON() called without any proto files")
     return()
-  endif(NOT ARGN)
+  endif()
+  if(PROTOBUF_GENERATE_PYTHON_APPEND_PATH)
+    # Create an include path for each file specified
+    foreach(FIL ${ARGN})
+      get_filename_component(ABS_FIL ${FIL} ABSOLUTE)
+      get_filename_component(ABS_PATH ${ABS_FIL} PATH)
+      list(FIND _protobuf_include_path ${ABS_PATH} _contains_already)
+      if(${_contains_already} EQUAL -1)
+          list(APPEND _protobuf_include_path -I ${ABS_PATH})
+      endif()
+    endforeach()
+  else()
+    set(_protobuf_include_path -I ${CMAKE_CURRENT_SOURCE_DIR})
+  endif()
+
+  if(DEFINED PROTOBUF_IMPORT_DIRS)
+    foreach(DIR ${PROTOBUF_IMPORT_DIRS})
+      get_filename_component(ABS_PATH ${DIR} ABSOLUTE)
+      list(FIND _protobuf_include_path ${ABS_PATH} _contains_already)
+      if(${_contains_already} EQUAL -1)
+          list(APPEND _protobuf_include_path -I ${ABS_PATH})
+      endif()
+    endforeach()
+  endif()
 
   set(${PYSRC})
   foreach(FIL ${ARGN})
     get_filename_component(ABS_FIL ${FIL} ABSOLUTE)
     get_filename_component(FIL_WE ${FIL} NAME_WE)
-    get_filename_component(PATH ${FIL} PATH)
-
+	
     list(APPEND PYSRC "${OUTPATH}/${FIL_WE}_pb2.py")
-message("PYSRC:${PYSRC}")
     add_custom_command(
       OUTPUT "${OUTPATH}/${FIL_WE}_pb2.py"
       COMMAND  ${PROTOBUF_PROTOC_EXECUTABLE}
-      ARGS --python_out ${OUTPATH}
-           --proto_path ${PATH}
+      ARGS --python_out ${OUTPATH} ${_protobuf_include_path}
            ${ABS_FIL}
       DEPENDS ${ABS_FIL}
       COMMENT "Running Python protocol buffer compiler on ${FIL}"
@@ -208,6 +228,11 @@ if(NOT DEFINED PROTOBUF_GENERATE_CPP_APPEND_PATH)
   set(PROTOBUF_GENERATE_CPP_APPEND_PATH TRUE)
 endif()
 
+# A.H :By default have PROTOBUF_GENERATE_PYTHON macro pass -I to protoc
+# for each directory where a proto file is referenced.
+if(NOT DEFINED PROTOBUF_GENERATE_PYTHON_APPEND_PATH)
+  set(PROTOBUF_GENERATE_PYTHON_APPEND_PATH TRUE)
+endif()
 
 # Google's provided vcproj files generate libraries with a "lib"
 # prefix on Windows
