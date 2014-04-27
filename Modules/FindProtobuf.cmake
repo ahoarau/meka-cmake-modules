@@ -171,7 +171,6 @@ function(PROTOBUF_GENERATE_CPP SRCS HDRS OUTPATH)
       ARGS --cpp_out  ${CUSTOM_PATH} ${_protobuf_include_path} ${ABS_FIL}
       DEPENDS ${ABS_FIL}
       COMMENT "Running C++ protocol buffer compiler on ${FIL}"
-      COMMENT "Saving file to ${CUSTOM_PATH}/${FIL_WE}.pb.cc ${CUSTOM_PATH}/${FIL_WE}.pb.h"
       VERBATIM )
   endforeach()
 
