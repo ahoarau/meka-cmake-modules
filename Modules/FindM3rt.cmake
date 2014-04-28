@@ -3,7 +3,7 @@
 set(FIND_M3RT_LIB_SUFFIX "")
 
 # find the M3RT include directory
-message ("!!!M3RT_SRC: ${M3RT_SRC}")
+# message ("!!!M3RT_SRC: ${M3RT_SRC}")
 find_path(M3RT_ROOT m3rt
 	PATH_SUFFIXES include
 		PATHS
@@ -14,7 +14,7 @@ find_path(M3RT_ROOT m3rt
 
 #set(M3RT_ROOT ${M3RT_ROOT}/m3rt/)
 
-message("!!!M3RT ROOT IS ${M3RT_ROOT}")
+# message("!!!M3RT ROOT IS ${M3RT_ROOT}")
 
 # find the requested modules
 set(M3RT_FOUND TRUE) # will be set to false if one of the required modules is not found
