@@ -1,68 +1,80 @@
-#*********************************************************************
-#**                Image Component Library (ICL)                    **
-#**                                                                 **
-#** Copyright (C) 2006-2013 CITEC, University of Bielefeld          **
-#**                         Neuroinformatics Group                  **
-#** Website: www.iclcv.org and                                      **
-#**          http://opensource.cit-ec.de/projects/icl               **
-#**                                                                 **
-#** File   : cmake/Modules/FindEigen3.cmake                         **
-#** Module : FindEigen3                                             **
-#** Authors: Michael Goetting                                       **
-#**                                                                 **
-#**                                                                 **
-#** GNU LESSER GENERAL PUBLIC LICENSE                               **
-#** This file may be used under the terms of the GNU Lesser General **
-#** Public License version 3.0 as published by the                  **
-#**                                                                 **
-#** Free Software Foundation and appearing in the file LICENSE.LGPL **
-#** included in the packaging of this file.  Please review the      **
-#** following information to ensure the license requirements will   **
-#** be met: http://www.gnu.org/licenses/lgpl-3.0.txt                **
-#**                                                                 **
-#** The development of this software was supported by the           **
-#** Excellence Cluster EXC 277 Cognitive Interaction Technology.    **
-#** The Excellence Cluster EXC 277 is a grant of the Deutsche       **
-#** Forschungsgemeinschaft (DFG) in the context of the German       **
-#** Excellence Initiative.                                          **
-#**                                                                 **
-#*********************************************************************
+# - Try to find Eigen3 lib
+#
+# This module supports requiring a minimum version, e.g. you can do
+#   find_package(Eigen3 3.1.2)
+# to require version 3.1.2 or newer of Eigen3.
+#
+# Once done this will define
+#
+#  EIGEN3_FOUND - system has eigen lib with correct version
+#  EIGEN3_INCLUDE_DIR - the eigen include directory
+#  EIGEN3_VERSION - eigen version
 
-INCLUDE(FindPackageHandleStandardArgs)
+# Copyright (c) 2006, 2007 Montel Laurent, <montel@kde.org>
+# Copyright (c) 2008, 2009 Gael Guennebaud, <g.gael@free.fr>
+# Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
+# Redistribution and use is allowed according to the terms of the 2-clause BSD license.
 
-# ---------------------------------------------------------------------
-# Start main part here
-# ---------------------------------------------------------------------
+if(NOT Eigen3_FIND_VERSION)
+  if(NOT Eigen3_FIND_VERSION_MAJOR)
+    set(Eigen3_FIND_VERSION_MAJOR 2)
+  endif(NOT Eigen3_FIND_VERSION_MAJOR)
+  if(NOT Eigen3_FIND_VERSION_MINOR)
+    set(Eigen3_FIND_VERSION_MINOR 91)
+  endif(NOT Eigen3_FIND_VERSION_MINOR)
+  if(NOT Eigen3_FIND_VERSION_PATCH)
+    set(Eigen3_FIND_VERSION_PATCH 0)
+  endif(NOT Eigen3_FIND_VERSION_PATCH)
 
-# Search EIGEN3_ROOT first if it is set.
-IF(EIGEN3_ROOT)
-  SET(_EIGEN3_SEARCH_ROOT PATHS ${EIGEN3_ROOT} ${EIGEN3_ROOT}/lib ${EIGEN3_ROOT}/ipp NO_DEFAULT_PATH)
-  LIST(APPEND _EIGEN3_SEARCHES _EIGEN3_SEARCH_ROOT)
-ENDIF()
+  set(Eigen3_FIND_VERSION "${Eigen3_FIND_VERSION_MAJOR}.${Eigen3_FIND_VERSION_MINOR}.${Eigen3_FIND_VERSION_PATCH}")
+endif(NOT Eigen3_FIND_VERSION)
 
-# Normal search.
-SET(_EIGEN3_SEARCH_NORMAL
-     PATHS "/usr"
-   )
-LIST(APPEND _EIGEN3_SEARCHES _EIGEN3_SEARCH_NORMAL)
+macro(_eigen3_check_version)
+  file(READ "${EIGEN3_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h" _eigen3_version_header)
 
-# Try each search configuration
-FOREACH(_PATH ${_EIGEN3_SEARCHES})
-  FIND_PATH(EIGEN3_INCLUDE_DIR 
-            NAMES Eigen/Eigen
-	    PATHS ${${_PATH}}
-	    PATH_SUFFIXES "include/eigen3" 	  
-	    DOC "The path to EIGEN3 header files"
-	    NO_DEFAULT_PATH)  
-ENDFOREACH()
-	   
-# Handle the QUIETLY and REQUIRED arguments and set EIGEN3_FOUND to TRUE if 
-# all listed variables are TRUE
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(EIGEN3 REQUIRED_VARS 
-				  EIGEN3_INCLUDE_DIR)
+  string(REGEX MATCH "define[ \t]+EIGEN_WORLD_VERSION[ \t]+([0-9]+)" _eigen3_world_version_match "${_eigen3_version_header}")
+  set(EIGEN3_WORLD_VERSION "${CMAKE_MATCH_1}")
+  string(REGEX MATCH "define[ \t]+EIGEN_MAJOR_VERSION[ \t]+([0-9]+)" _eigen3_major_version_match "${_eigen3_version_header}")
+  set(EIGEN3_MAJOR_VERSION "${CMAKE_MATCH_1}")
+  string(REGEX MATCH "define[ \t]+EIGEN_MINOR_VERSION[ \t]+([0-9]+)" _eigen3_minor_version_match "${_eigen3_version_header}")
+  set(EIGEN3_MINOR_VERSION "${CMAKE_MATCH_1}")
 
-IF(EIGEN3_FOUND)
-  SET(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
-ENDIF()
+  set(EIGEN3_VERSION ${EIGEN3_WORLD_VERSION}.${EIGEN3_MAJOR_VERSION}.${EIGEN3_MINOR_VERSION})
+  if(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
+    set(EIGEN3_VERSION_OK FALSE)
+  else(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
+    set(EIGEN3_VERSION_OK TRUE)
+  endif(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
 
-MARK_AS_ADVANCED(EIGEN3_INCLUDE_DIR)
+  if(NOT EIGEN3_VERSION_OK)
+
+    message(STATUS "Eigen3 version ${EIGEN3_VERSION} found in ${EIGEN3_INCLUDE_DIR}, "
+                   "but at least version ${Eigen3_FIND_VERSION} is required")
+  endif(NOT EIGEN3_VERSION_OK)
+endmacro(_eigen3_check_version)
+
+if (EIGEN3_INCLUDE_DIR)
+
+  # in cache already
+  _eigen3_check_version()
+  set(EIGEN3_FOUND ${EIGEN3_VERSION_OK})
+
+else (EIGEN3_INCLUDE_DIR)
+
+  find_path(EIGEN3_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
+      PATHS
+      ${CMAKE_INSTALL_PREFIX}/include
+      ${KDE4_INCLUDE_DIR}
+      PATH_SUFFIXES eigen3 eigen
+    )
+
+  if(EIGEN3_INCLUDE_DIR)
+    _eigen3_check_version()
+  endif(EIGEN3_INCLUDE_DIR)
+
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(Eigen3 DEFAULT_MSG EIGEN3_INCLUDE_DIR EIGEN3_VERSION_OK)
+
+  mark_as_advanced(EIGEN3_INCLUDE_DIR)
+
+endif(EIGEN3_INCLUDE_DIR)
