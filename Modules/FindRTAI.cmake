@@ -13,7 +13,6 @@
 #
 ################################################################################
 
-include(LibFindMacros)
 if(UNIX)
   SET(RTAI_SEARCH_PATH
     /usr
@@ -43,8 +42,6 @@ else()
   find_path(RTAI_INCLUDE_DIR       NAMES ${header_NAME} PATHS ${RTAI_SEARCH_PATH} PATH_SUFFIXES include )
   find_library(RTAI_LIBRARY        NAMES ${rtai_NAME} PATHS ${RTAI_SEARCH_PATH} PATH_SUFFIXES lib)
 endif()
-message("-- rtai include dir : ${RTAI_INCLUDE_DIR}")
-message("-- rtai library : ${RTAI_LIBRARY}")
 # Set the include dir variables and the libraries and let libfind_process do the rest.
 # NOTE: Singular variables for this library, plural for libraries this this lib depends on.
 set(RTAI_PROCESS_INCLUDES RTAI_INCLUDE_DIR)
@@ -58,4 +55,9 @@ if( LINUX_SOURCE_DIR )
   list(APPEND RTAI_PROCESS_INCLUDES Linux_INCLUDE_DIR)
 endif()
 
-libfind_process(RTAI)
+include(FindPackageHandleStandardArgs)
+# handle the QUIETLY and REQUIRED arguments and set HOLOMNI_FOUND to TRUE
+# if all listed variables are TRUE
+find_package_handle_standard_args(RTAI  DEFAULT_MSG
+                                  RTAI_LIBRARY RTAI_PROCESS_INCLUDES)
+mark_as_advanced(RTAI_INCLUDE_DIR RTAI_LIBRARY )
