@@ -16,8 +16,10 @@ find_path(HOLOMNI_INCLUDE_DIR holomni_pcv/Caster.h
 find_library(HOLOMNI_LIBRARY NAMES holomni_pcv holomni HOLOMNI
              HINTS ${HOLOMNI_LIBDIR} ${HOLOMNI_LIBRARY_DIRS} )
 
-set(HOLOMNI_LIBRARIES ${HOLOMNI_LIBRARY} )
-set(HOLOMNI_INCLUDE_DIRS ${HOLOMNI_INCLUDE_DIR} )
+if(M3RT_FOUND)
+  set(HOLOMNI_LIBRARIES ${HOLOMNI_LIBRARY} )
+  set(HOLOMNI_INCLUDE_DIRS ${HOLOMNI_INCLUDE_DIR} )
+endif(M3RT_FOUND)
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set HOLOMNI_FOUND to TRUE

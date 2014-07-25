@@ -1,4 +1,4 @@
-
+# Antoine Hoarau <hoarau.robotics@gmail.com>
 # deduce the libraries suffix from the options
 set(FIND_M3_LIB_SUFFIX "")
 
@@ -14,7 +14,7 @@ find_path(M3_ROOT m3
 #message("!!!M3 ROOT IS ${M3_ROOT}")
 
 # find the requested modules
-set(M3_FOUND TRUE) # will be set to false if one of the required modules is not found
+#set(M3_FOUND TRUE) # will be set to false if one of the required modules is not found
 set(FIND_M3_LIB_PATHS
 		/usr/local
 		/usr)
@@ -26,11 +26,17 @@ foreach(FIND_M3_COMPONENT ${M3_FIND_COMPONENTS})
     find_library(M3_${FIND_M3_COMPONENT} NAMES ${FIND_M3_COMPONENT_NAME} PATHS ${FIND_M3_LIB_PATHS} PATH_SUFFIXES lib)
     set(M3_LIBRARIES ${M3_LIBRARIES} ${M3_${FIND_M3_COMPONENT}})
 endforeach()
-set(M3_INCLUDE_DIR ${M3_INCLUDE_DIR} ${M3_ROOT})
-set(M3_INCLUDE_DIRS ${M3_INCLUDE_DIR})
-message("-- m3 libraries: ${M3_LIBRARIES}")
-message("-- m3 include dirs: ${M3_INCLUDE_DIRS}")
 
+if(M3_FOUND)
+  set(M3_INCLUDE_DIR ${M3_INCLUDE_DIR} ${M3_ROOT})
+  set(M3_INCLUDE_DIRS ${M3_INCLUDE_DIR})
+endif(M3_FOUND)
+
+MARK_AS_ADVANCED(
+M3_FOUND
+M3_INCLUDE_DIR
+M3_LIBRARIES
+)
 
 
 
