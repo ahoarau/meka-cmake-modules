@@ -6,14 +6,14 @@
 #  HOLOMNI_DEFINITIONS - Compiler switches required for using HOLOMNI
 
 find_package(PkgConfig)
-pkg_check_modules(HOLOMNI QUIET libholomni_pcv)
+pkg_check_modules(HOLOMNI QUIET libholomni_pcv libholomni-pcv)
 set(HOLOMNI_DEFINITIONS ${HOLOMNI_CFLAGS_OTHER})
 
-find_path(HOLOMNI_INCLUDE_DIR holomni_pcv/Caster.h
+find_path(HOLOMNI_INCLUDE_DIR holomni_pcv/Caster.h holomni-pcv/Caster.h
           HINTS ${HOLOMNI_INCLUDEDIR} ${HOLOMNI_INCLUDE_DIRS}
           PATH_SUFFIXES HOLOMNI )
 
-find_library(HOLOMNI_LIBRARY NAMES holomni_pcv holomni HOLOMNI
+find_library(HOLOMNI_LIBRARY NAMES holomni_pcv holomni-pcv holomni HOLOMNI
              HINTS ${HOLOMNI_LIBDIR} ${HOLOMNI_LIBRARY_DIRS} )
 
 if(M3RT_FOUND)

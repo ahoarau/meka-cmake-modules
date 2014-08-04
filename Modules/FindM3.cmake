@@ -3,7 +3,7 @@
 set(FIND_M3_LIB_SUFFIX "")
 
 # find the M3 include directory
-find_path(M3_ROOT m3
+find_path(M3_ROOT m3/chains/joint_array.h
 	PATH_SUFFIXES include
 		PATHS
 		${M3_SRC}

@@ -4,7 +4,7 @@ set(FIND_M3RT_LIB_SUFFIX "")
 
 # find the M3RT include directory
 # message ("!!!M3RT_SRC: ${M3RT_SRC}")
-find_path(M3RT_ROOT m3rt
+find_path(M3RT_ROOT m3rt/base/toolbox.h
 	PATH_SUFFIXES include
 		PATHS
 		${M3RT_SRC}
