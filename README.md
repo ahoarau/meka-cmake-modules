@@ -1,14 +1,12 @@
 # Meka Cmake Modules 
 
 # Getting the repo
-```
-#!bash
-git clone git@bitbucket.org:ensta/meka-cmake-modules.git
+```bash
+git clone https://github.com/ahoarau/meka-cmake-modules.git
 ```
 
 # Installing
-```
-#!bash
+```bash
 cd meka-cmake-modules
 mkdir build; cd build
 cmake ..
@@ -17,9 +15,9 @@ sudo make install
 
 or cmake .. -DOVERWRITE=1 to overwrite existing files
 
- /!\ WARNING : the files are (for now) installed in ${CMAKE_ROOT}/Modules
+> WARNING : the files are (for now) installed in ${CMAKE_ROOT}/Modules
 
-TODO : use a proper directory
+> TODO : use a proper directory
 
 
 
