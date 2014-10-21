@@ -8,6 +8,7 @@ find_path(M3RT_ROOT m3rt/base/toolbox.h
 	PATH_SUFFIXES include
 		PATHS
 		${M3RT_SRC}
+		/opt/m3
 		/usr/local/
 		/usr)
 
@@ -16,6 +17,7 @@ find_path(M3RT_ROOT m3rt/base/toolbox.h
 # find the requested modules
 #set(M3RT_FOUND TRUE) # will be set to false if one of the required modules is not found
 set(FIND_M3RT_LIB_PATHS
+		/opt/m3
 		/usr/local
 		/usr)
 
